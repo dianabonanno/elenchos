@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="it"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Elenchos</title>
-
+<title>Elenchos — La Via Socratica</title>
 <style>
-:root{--bg:#f3e9d2;--tx:#1b1b2f;--pn:#fff7e0;--ac:#b5541c;--ok:#2f8f4a;--no:#c0392b;--wax:#c9a46a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#f3e9d2;--tx:#1b1b2f;--pn:#fff7e0;--ac:#b5541c;--ok:#2f8f4a;--no:#c0392b;--wax:#c9a46a;--gold:#f2c14e;
+padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1b2f;--tx:#f4f0e0;--pn:#2a2a4a;--ac:#f2c14e;--ok:#6fcf7f;--no:#ef6a6a}}
 :root[data-theme="dark"]{--bg:#1b1b2f;--tx:#f4f0e0;--pn:#2a2a4a;--ac:#f2c14e;--ok:#6fcf7f;--no:#ef6a6a}
 *{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:12px/1.8 monospace;min-height:100%}
 #app{max-width:640px;margin:0 auto;padding:16px 14px 40px}
 h1{font-size:30px;margin:10px 0;color:var(--ac);text-align:center;letter-spacing:2px}
@@ -22,40 +21,101 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--tx)}
 button.go{background:var(--ac);color:#fff;text-align:center}
 :root:not([data-theme="light"]) button.go{color:#1b1b2f}
 button.sel{outline:4px solid var(--ac);outline-offset:2px}
-.hud{display:flex;justify-content:space-between;gap:4px 12px;flex-wrap:wrap;padding:8px 0;border-bottom:4px solid var(--tx);margin-bottom:8px;font-size:11px;}
+.hud{display:flex;justify-content:space-between;gap:4px 12px;flex-wrap:wrap;padding:8px 0;border-bottom:4px solid var(--tx);margin-bottom:8px;font-size:11px}
 .row{display:flex;gap:8px}.row button{text-align:center;padding:8px 4px;font-size:10px}
 .who{display:flex;gap:12px;align-items:flex-start}.who svg{flex:none}
 .bar{display:flex;justify-content:flex-end;gap:8px}.bar button{width:auto;min-height:38px;margin:0 0 6px;padding:6px 8px;font-size:9px;text-align:center}
 .stop{display:flex;justify-content:space-between;gap:8px;align-items:center}.stop span.st{font-size:9px;flex:none}
-.map{width:100%;height:auto;display:block;border:4px solid var(--tx);background:#3a6fa8}.map text{font-family:monospace;paint-order:stroke;stroke:#1b1b2f;stroke-width:2.5px;stroke-linejoin:round}
+.map{width:100%;height:auto;display:block;border:4px solid var(--tx);background:linear-gradient(180deg,#1b3a5c,#3a6fa8)}
+.map text{font-family:monospace;paint-order:stroke;stroke:#0b0b18;stroke-width:2.5px;stroke-linejoin:round}
 .ok{color:var(--ok)}.no{color:var(--no)}
 @keyframes f{from{opacity:0}to{opacity:1}}.fade{animation:f 3s ease-in}.blk{background:#000;color:#f4f0e0;border-color:#000;box-shadow:none}
 svg{image-rendering:pixelated;shape-rendering:crispEdges}
-
 .type{min-height:2em}
 .typing-actions{display:flex;justify-content:flex-end;gap:8px;margin:4px 0 8px}
 .typing-actions button{width:auto;min-height:34px;margin:0;padding:5px 8px;font-size:8px}
 .player-card{display:flex;gap:10px;align-items:center;background:rgba(0,0,0,.05);border:2px dashed var(--tx);padding:7px;margin:8px 0}
 .player-card .sm{margin:0}
-.answer-lock{opacity:.7}
+.player-card svg{flex:none}
+
+/* ===== ESPLORAZIONE POKÉMON ===== */
+.hub-wrap{position:relative;width:100%;max-width:460px;margin:8px auto;border:4px solid var(--tx);box-shadow:4px 4px 0 var(--tx);overflow:hidden}
+.hub{display:grid;position:relative;width:100%;line-height:0}
+.cell{position:relative;aspect-ratio:1/1;overflow:hidden}
+.cell .bg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cell .npc{position:absolute;left:14%;top:8%;width:72%;height:88%;z-index:5;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.cell .npc svg{width:100%;height:100%;display:block}
+.player{position:absolute;z-index:20;pointer-events:none;display:flex;align-items:center;justify-content:center;transition:left .11s linear,top .11s linear;filter:drop-shadow(0 3px 0 rgba(0,0,0,.4))}
+.player svg{width:78%;height:78%;display:block}
+.dpad{display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(3,52px);gap:4px;justify-content:center;margin:12px auto 0}
+.dpad button{width:52px;height:52px;min-height:0;margin:0;padding:0;text-align:center;font-size:18px;line-height:1;box-shadow:3px 3px 0 var(--tx)}
+.dpad .sp{visibility:hidden;pointer-events:none}
+.hub-title{text-align:center;font-size:11px;letter-spacing:3px;color:var(--ac);margin:6px 0 2px;font-weight:bold}
+.hub-obj{text-align:center;font-size:10px;opacity:.8;margin:2px 0 8px}
+
+/* popup +oboli */
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,24px) scale(.7)}25%{opacity:1;transform:translate(-50%,0) scale(1.15)}75%{opacity:1;transform:translate(-50%,-6px) scale(1)}100%{opacity:0;transform:translate(-50%,-46px) scale(.95)}}
+.float-up{position:fixed;left:50%;top:38%;font:bold 22px monospace;color:var(--gold);text-shadow:2px 2px 0 #1b1b2f;animation:floatUp 2.1s ease-out forwards;pointer-events:none;z-index:999}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.shake{animation:shake .4s ease-in-out}
+
+/* cutscene */
+.cut{position:relative;width:100%;border:4px solid var(--tx);box-shadow:4px 4px 0 var(--tx);overflow:hidden;background:#0b0b18;margin:8px 0}
+.cut svg{width:100%;display:block}
+.cut-cap{background:#0b0b18;color:#f4f0e0;border:4px solid var(--tx);border-top:0;padding:10px;font-size:11px;line-height:1.7;min-height:3.6em}
+@keyframes smoke{0%{transform:translateY(0) scale(1);opacity:.55}100%{transform:translateY(-26px) scale(1.7);opacity:0}}
+.smoke{animation:smoke 3.2s ease-out infinite}
+@keyframes wave{0%{transform:translateX(0)}100%{transform:translateX(-24px)}}
+.wave{animation:wave 4s linear infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+.bob{animation:bob 2.4s ease-in-out infinite}
+
+/* papiri */
+.papyrus{background:linear-gradient(160deg,#e8d9a8,#c9a46a 60%,#a07c3e);border:5px solid #6b4a1e;box-shadow:0 0 0 4px #3a2a14,6px 6px 0 rgba(0,0,0,.35);padding:18px 16px;margin:14px 0;color:#2b1d0e;position:relative}
+.papyrus:before{content:"";position:absolute;inset:6px;border:1px dashed rgba(43,29,14,.35);pointer-events:none}
+.papyrus .frag-num{font-size:10px;letter-spacing:3px;opacity:.7}
+.papyrus .frag-txt{font-size:14px;line-height:1.7;margin-top:8px;font-style:italic}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 0 var(--gold))}50%{filter:drop-shadow(0 0 14px var(--gold))}}
+.glow{animation:glow 2s ease-in-out infinite}
+.hint-dots{letter-spacing:3px;color:var(--gold);font-size:16px}
 </style></head><body>
 <div id="app"></div>
+<audio id="bgm" loop preload="auto"></audio>
 <script>
-/* ===== TESTI E DATI (tutto il contenuto del gioco è qui) ===== */
+/* ==========================================================
+   COLONNA SONORA — inserisci qui i percorsi dei tuoi .wav.
+   Esempio: bgm:"audio/tema.wav"  —  lascia "" per sintesi.
+   ========================================================== */
+const AUDIO={
+  bgm:"", bgmTense:"",
+  sfx:{chains:"",crowd:"",wind:"",waves:"",gulls:"",drum:"",tablet:"",blip:"",coin:"",door:""}
+};
+
+/* ================= DATI GIOCO ================= */
 const T={
- title:"ELENCHOS", sub:"Atene, 399 a.C. Qui vince chi ascolta, non chi sa.",
+ title:"ELENCHOS", sub:"LA VIA SOCRATICA — Atene, 399 a.C.",
+ cutIntro:[
+  "Atene, 399 a.C. Il sole cala sulle mura della città.",
+  "Le catene della prigione risuonano nel buio.",
+  "Nella locanda, Platone brucia di febbre.",
+  "Tre papiri sono scomparsi. Cinque giorni ti separano dal processo."
+ ],
  intro:[
   {who:"socrate",name:"Socrate",text:"Atene, 399 a.C. Mancano 5 giorni al mio processo. I rivali hanno preso i tre scritti di Platone. Io ti farò solo domande: la risposta devi trovarla tu."},
   {who:"platone",name:"Platone, malato",text:"Prendi il mio anello: ti aprirà le porte. Recupera i tre frammenti. Serviranno a difendere Socrate."}
  ],
- avatars:[{n:"Aris",t:"#3a6fd8",h:"#4a2c14"},{n:"Nike",t:"#c0392b",h:"#e0b030"},{n:"Teo",t:"#2f8f4a",h:"#222222"}],
+ avatars:[
+  {n:"Aris — chitone bianco",t:"#e8e0c8",h:"#4a2c14"},
+  {n:"Nike — chitone terracotta",t:"#c0662a",h:"#e0b030"},
+  {n:"Teo — chitone blu",t:"#3a6fd8",h:"#222222"}
+ ],
  schools:[
   {n:"Megarica",f:"Fondata da Euclide di Megara, allievo di Socrate. Maestri di discussione.",p:"Potere: vedi meglio i punti deboli di un discorso."},
   {n:"Cinica",f:"Fondata da Antistene, allievo di Socrate. Vita semplice, con poco.",p:"Potere: vivi con poco, quindi gli oboli valgono di più."},
   {n:"Cirenaica",f:"Fondata da Aristippo, allievo di Socrate. Stare bene ovunque.",p:"Potere: sai adattarti, quindi un errore pesa meno."}
  ],
  powerNote:"I poteri delle scuole arriveranno presto: per ora scegli solo la tua.",
-map:{title:"LA GRECIA ANTICA",hint:"Scegli una tappa. Ogni luogo ha un tema.",
+ map:{title:"LA GRECIA ANTICA",hint:"Scegli una tappa. Ogni luogo ha un tema.",
   stops:[
    {id:"delfi",n:"Delfi",who:"La Pizia",theme:"Conosci te stesso",q:"Chi sei, davvero?",x:132,y:104,l:1},
    {id:"pit",n:"Crotone",who:"Pitagora",theme:"Autorità",q:"Basta che lo dica un maestro?",x:30,y:205},
@@ -67,7 +127,10 @@ map:{title:"LA GRECIA ANTICA",hint:"Scegli una tappa. Ogni luogo ha un tema.",
   restart:"RICOMINCIA",fragT:"HAI IL FRAMMENTO!",back:"TORNA ALLA MAPPA",hintBtn:"USA INDIZIO",buy:"COMPRA INDIZIO (1 obolo)",
   pizia:"La Pizia: «Socrate è il più sapiente perché sa di non sapere. Per un obolo ti do un indizio.»",
   piziaNo:"Non hai oboli. Vinci un duello e torna da me.",hints:"Indizi:",hintInfo:"Un indizio toglie una risposta sbagliata.",
-  fin:"Hai i tre frammenti. Ora Socrate ti ascolta.",finNote:"Con 30 oboli o più si apre anche l'Esilio.",tribunale:"TRIBUNALE",esilio:"ESILIO",fade:"La scena sfuma..."},
+  fin:"Hai i tre frammenti. Ora Socrate ti ascolta.",finNote:"Con 30 oboli o più si apre anche l'Esilio.",
+  tribunale:"TRIBUNALE",esilio:"ESILIO",fade:"La scena sfuma...",
+  skip:"▶ TESTO COMPLETO",ring:"+ANELLO CON SIGILLO",
+  cutNext:"AVANTI",cutLast:"CONTINUA"},
  duels:{
   pit:{n:"Pitagora",sp:"pitagora",reward:10,card:"Pitagora, a Crotone, dice: «Quello che dice il Maestro è vero, e basta.»",
    tablet:["«La parola del Maestro è verità assoluta.»","«Il Maestro è famoso per aver dimostrato il Teorema.»"],
@@ -98,64 +161,569 @@ map:{title:"LA GRECIA ANTICA",hint:"Scegli una tappa. Ogni luogo ha un tema.",
   B:{a:["Porto del Pireo. Socrate accetta di lasciare Atene.","I tuoi oboli pagano il viaggio. Con Platone e con te, sale su una nave per la Sicilia."],
      b:["Fonderà una scuola itinerante e insegnerà a chiunque voglia ascoltare.","Nella storia vera, Socrate rifiutò di fuggire. Qui Elenchos immagina un altro finale."]}}
 };
-/* ===== SPRITE ===== */
-const BASE=["..HHHH..",".HHHHHH.",".SSSSSS.",".SESSES.",".SSSSSS.","..TTTT..",".TTTTTT.","STTTTTTS",".TTTTTT.",".TT..TT."];
-const PEOPLE={socrate:{H:"#bdbdbd",S:"#e8b890",T:"#e8e0c8",E:"#222"},platone:{H:"#6b4a1e",S:"#e8b890",T:"#8a5cc0",E:"#222"},pitagora:{H:"#dddddd",S:"#e8b890",T:"#f0f0f0",E:"#222"}};
-function spr(p,px=9){let r="";BASE.forEach((row,y)=>[...row].forEach((c,x)=>{if(c!=".")r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${p[c]}"/>`}));return `<svg width="${8*px}" height="${10*px}" viewBox="0 0 8 10" aria-hidden="true">${r}</svg>`}
-const av=i=>{const a=T.avatars[i];return {H:a.h,S:"#e8b890",T:a.t,E:"#222"}};
-/* ===== STATO ===== */
-const S={scr:"title",i:0,av:0,sc:0,days:5,ob:0,won:[],msg:"",cur:"",step:-1,dead:[],fb:"",hints:0,snd:true,typing:null,typingTimer:null};
-let AC;
-function beep(f,d=.12){if(!S.snd)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type="square";o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
-function tg(){S.snd=!S.snd;beep(440);R()}
-const hud=()=>`<div class="hud"><span>GIORNI ${"■".repeat(Math.max(S.days,0))}${"□".repeat(5-Math.max(S.days,0))}</span><span>FRAMMENTI ${S.won.length}/3</span><span>OBOLI ${S.ob}</span></div>`;
-const btn=(t,fn,c="go")=>`<button class="${c}" onclick="${fn}">${t}</button>`;
-/* ===== SCHERMATE ===== */
-const SC={
- title:()=>`<h1>${T.title}</h1><div class="c">${spr(PEOPLE.socrate,14)}</div><p class="c sm">${T.sub}</p>${btn(T.ui.start,"go('intro')")}`,
- intro:()=>{const s=T.intro[S.i];return `<div class="who">${spr(PEOPLE[s.who])}<div><h2>${s.name}</h2></div></div><div class="box"><div class="type" data-type="${esc(s.text)}"></div></div>${typeControl()}${btn(T.ui.next,"nextIntro()")}`},
- pick:()=>`<h2>${T.ui.choose}</h2><div class="row">${T.avatars.map((a,i)=>`<button class="${S.av==i?"sel":""}" onclick="S.av=${i};beep(500);R()">${spr(av(i),6)}<br>${a.n}</button>`).join("")}</div>
-  <div class="player-card">${spr(av(S.av),5)}<div><b>IL TUO PERSONAGGIO</b><br><span class="sm">${T.avatars[S.av].n}</span></div></div>
-  <h2>${T.ui.school}</h2>${T.schools.map((s,i)=>`<button class="${S.sc==i?"sel":""}" onclick="S.sc=${i};beep(500);R()">${s.n}<br><span class="sm">${s.f}<br>${s.p}</span></button>`).join("")}<p class="sm">${T.powerNote}</p>${btn(T.ui.go,"go('map')")}`,
- map:()=>{const m=T.map,st=m.stops;
-  const pin=(s,i)=>{const d=S.won.includes(s.id),c=d?"#6fcf7f":s.id=="delfi"?"#c9a0e0":"#f2c14e",l=s.l?"end":"start",dx=s.l?-9:9;
-   return `<g onclick="visit('${s.id}')" style="cursor:pointer"><rect x="${s.x-6}" y="${s.y-6}" width="12" height="12" fill="${c}" stroke="#1b1b2f" stroke-width="2"/><text x="${s.x}" y="${s.y+3}" font-size="7" text-anchor="middle" fill="#1b1b2f" stroke="none">${i+1}</text>
-   <text x="${s.x+dx}" y="${s.y-1}" font-size="7" text-anchor="${l}" fill="#f2c14e">${s.theme.toUpperCase()}</text><text x="${s.x+dx}" y="${s.y+8}" font-size="5" text-anchor="${l}" fill="#f4f0e0">${s.n} - ${s.who}</text></g>`};
-  const svg=`<svg class="map" viewBox="0 0 320 300" role="img" aria-label="Mappa della Grecia antica"><g fill="#c9b36a" stroke="#6b5a2a" stroke-width="2" stroke-linejoin="miter">
-   <polygon points="0,150 35,168 52,210 32,252 12,232 0,200"/><polygon points="70,30 190,30 250,50 235,75 200,90 185,105 190,125 170,140 150,140 145,165 100,160 95,135 105,115 85,100 80,70 65,50"/>
-   <polygon points="105,165 140,165 168,178 176,198 160,226 130,236 104,216 98,190"/><polygon points="290,20 320,20 320,250 300,262 284,222 296,180 274,150 286,110 268,70"/>
-   <polygon points="110,268 200,262 206,276 120,284"/><polygon points="172,86 196,100 190,107 169,93"/><rect x="205" y="150" width="8" height="8"/><rect x="225" y="175" width="10" height="8"/><rect x="190" y="205" width="8" height="8"/><rect x="235" y="215" width="12" height="8"/></g>
-   ${st.map(pin).join("")}</svg>`;
-  const row=(s,i)=>{const d=S.won.includes(s.id),t=d?m.done:s.id=="delfi"?m.pizia:m.todo;return `<button class="stop" onclick="visit('${s.id}')"><span>${i+1}. ${s.n.toUpperCase()}<br><span class="sm">${s.theme}: ${s.q}</span></span><span class="st ${d?"ok":""}">${t}</span></button>`};
-  return hud()+`<div class="player-card">${spr(av(S.av),5)}<div><b>${T.avatars[S.av].n}</b><br><span class="sm">${T.schools[S.sc].n} · ${T.schools[S.sc].p}</span></div></div><h2>${m.title}</h2><p class="sm">${m.hint}</p>${svg}${S.msg?`<div class="box sm">${S.msg}</div>`:""}${st.map(row).join("")}${S.won.length>=3?btn(m.finish,"go('fin')"):""}`},
- delfi:()=>hud()+`<div class="who">${spr(PEOPLE.pizia)}<div><h2>Delfi</h2></div></div><div class="box"><div class="type" data-type="${esc(T.ui.pizia)}"></div></div>${typeControl()}<p class="sm">${T.ui.hints} ${S.hints}. ${T.ui.hintInfo}</p>${S.ob>0?btn(T.ui.buy,"buy()"):`<div class="box no">${T.ui.piziaNo}</div>`}${btn(T.ui.back,"go('map')","")}`,
- duel:()=>{const d=D();
-  if(S.step<0)return hud()+`<div class="who">${spr(PEOPLE[d.sp])}<div><h2>${d.n}</h2></div></div><div class="box"><div class="type" data-type="${esc(d.card)}"></div></div>${typeControl()}${btn(T.ui.fight,"S.step=0;beep(520);R()")}`;
-  const st=d.steps[S.step],tab=d.tablet?`<div class="wax"><b>TAVOLETTA</b>${d.tablet.map(x=>`<p>${x}</p>`).join("")}</div>`:"",left=st.ans.some((a,i)=>!a.ok&&!S.dead.includes(i));
-  return hud()+`<p class="sm">${T.ui.step} ${S.step+1}/${d.steps.length}</p>${tab}<div class="who">${spr(PEOPLE.socrate,6)}<div class="sm"><b>Socrate:</b> <span class="type" data-type="${esc(st.q)}"></span></div></div>${typeControl()}<div class="player-card">${spr(av(S.av),4)}<div class="sm"><b>${T.avatars[S.av].n}:</b> scegli la risposta che mette alla prova l'argomento.</div></div>${S.fb?`<div class="box no">✘ −1 giorno. ${S.fb}</div>`:""}${st.ans.map((a,i)=>S.dead.includes(i)?"":btn(a.t,`ans(${i})`,"")).join("")}${S.hints>0&&left?btn(T.ui.hintBtn+" ("+S.hints+")","useHint()"):""}`},
- frag:()=>{const d=D();return hud()+`<h1 style="font-size:18px">${T.ui.fragT}</h1><div class="wax c"><b>FRAMMENTO ${S.won.length}/3</b><p>${d.frag}</p></div><p class="c ok">+${d.reward} oboli</p>${btn(T.ui.next,"go('map')")}`},
- fin:()=>{if(S.won.length<3)return hud()+`<div class="box no">Servono tutti e 3 i frammenti.</div>${btn(T.ui.back,"go('map')","")}`;return hud()+`<div class="who">${spr(PEOPLE.socrate)}<div><h2>Socrate</h2></div></div><div class="player-card">${spr(av(S.av),4)}<div class="sm"><b>${T.avatars[S.av].n}</b> · ${T.schools[S.sc].n}</div></div><div class="box">${T.ui.fin}</div>${btn(T.ui.tribunale,"go('finA')")}${S.ob>=30?btn(T.ui.esilio,"startDuel('soc')"):`<p class="sm">${T.ui.finNote}</p>`}`},
- finA:()=>endScr("A"),finB:()=>endScr("B"),
- lose:()=>hud()+`<div class="box no">${T.ui.lose}</div>${btn(T.ui.restart,"restart()")}`
+
+/* ================= DIALOGHI DI ESPLORAZIONE ================= */
+const TALK={
+ guard:[{who:"guard",name:"Guardia",text:"Muoviti, straniero. Il prigioniero ha cinque giorni, poi la nave da Delo riporterà il verdetto."}],
+ socrate_cell:[
+  {who:"socrate",name:"Socrate",text:"Atene, 399 a.C. Mancano 5 giorni al mio processo. I rivali hanno preso i tre scritti di Platone. Io ti farò solo domande: la risposta devi trovarla tu."},
+  {who:"socrate",name:"Socrate",text:"Va' da Platone, alla locanda. È malato, ma ha qualcosa per te."}
+ ],
+ plato_inn:[
+  {who:"platone",name:"Platone, malato",text:"Prendi il mio anello: ti aprirà le porte. Recupera i tre frammenti. Serviranno a difendere Socrate."},
+  {who:"platone",name:"Platone, malato",text:"Va' prima a Delfi. La Pizia sa come si smonta un avversario senza alzare la voce."}
+ ]
 };
-/* ===== LOGICA ===== */
+
+/* ================= MONDI ESPLORABILI ================= */
+const HUBS={
+ atene:{
+  piazza:{title:"PIAZZA DI ATENE",sky:"#a8d0e6",ground:"#c9b98a",
+   objective:"Entra nella locanda (a destra) o nella cella (a sinistra).",
+   tiles:[
+    "TTTTTTTTTTTT",
+    "T..........T",
+    "T.TT.......T",
+    "T..........T",
+    "T.......TT.T",
+    "TD........DT",
+    "TTTTTXXTTTTT"],
+   portals:{"1,5":{zone:"cella",x:4,y:4},"10,5":{zone:"locanda",x:4,y:4},"5,6":{map:true},"6,6":{map:true}}},
+  cella:{title:"CELLA DI SOCRATE",sky:"#2a2a3a",ground:"#5a4a3a",
+   objective:"Parla con Socrate.",
+   tiles:[
+    "##########",
+    "#........#",
+    "#..S.....#",
+    "#........#",
+    "#.....G..#",
+    "####D#####",
+    "##########"],
+   portals:{"4,5":{zone:"piazza",x:2,y:5}}},
+  locanda:{title:"LOCANDA DI PLATONE",sky:"#3a2a1a",ground:"#8a6a4a",
+   objective:"Raggiungi Platone a letto.",
+   tiles:[
+    "##########",
+    "#........#",
+    "#..P.....#",
+    "#........#",
+    "#........#",
+    "####D#####",
+    "##########"],
+   portals:{"4,5":{zone:"piazza",x:9,y:5}}}
+ },
+ delfi:{
+  santuario:{title:"SANTUARIO DI DELFI",sky:"#d8c8e8",ground:"#b8a888",fumes:true,
+   objective:"Parla con la Pizia. Poi esci (X).",
+   tiles:[
+    "##########",
+    "#........#",
+    "#...Z....#",
+    "#........#",
+    "#........#",
+    "####X#####",
+    "##########"],
+   portals:{"4,5":{map:true}}}
+ },
+ crotone:{
+  citta:{title:"CROTONE",sky:"#a8d0e6",ground:"#c9b98a",boss:"pit",
+   objective:"Affronta Pitagora.",
+   tiles:[
+    "##########",
+    "#........#",
+    "#..T..T..#",
+    "#...F....#",
+    "#........#",
+    "####X#####",
+    "##########"],
+   portals:{"4,5":{map:true}}}
+ },
+ efeso:{
+  citta:{title:"EFESO",sky:"#e8c8a8",ground:"#c9a878",boss:"era",
+   objective:"Affronta Eraclito.",
+   tiles:[
+    "##########",
+    "#........#",
+    "#..~~~...#",
+    "#...F....#",
+    "#........#",
+    "####X#####",
+    "##########"],
+   portals:{"4,5":{map:true}}}
+ },
+ agora:{
+  citta:{title:"AGORÀ DI ATENE",sky:"#a8d0e6",ground:"#c9b98a",boss:"pro",
+   objective:"Affronta Protagora.",
+   tiles:[
+    "##########",
+    "#........#",
+    "#..TT....#",
+    "#...F....#",
+    "#........#",
+    "####X#####",
+    "##########"],
+   portals:{"4,5":{map:true}}}
+ }
+};
+
+/* ================= SPRITE ================= */
+const BASE=["..HHHH..",".HHHHHH.",".HSSSSH.",".SESSES.",".SSSSSS.","..TTTT..",".TTTTTD.","STTTTTDS",".TTTTTD.",".TD..TD."];
+const PEOPLE={
+ socrate:{H:"#bdbdbd",S:"#e8b890",T:"#e8e0c8",E:"#222"},
+ platone:{H:"#6b4a1e",S:"#e8b890",T:"#8a5cc0",E:"#222"},
+ pitagora:{H:"#dddddd",S:"#e8b890",T:"#f0f0f0",E:"#222"},
+ pizia:{H:"#7a3b8a",S:"#e8b890",T:"#c9a0e0",E:"#222"},
+ eraclito:{H:"#555555",S:"#e8b890",T:"#a0522d",E:"#222"},
+ protagora:{H:"#222222",S:"#e8b890",T:"#d8c060",E:"#222"},
+ guard:{H:"#8a2a2a",S:"#e8b890",T:"#7a6a4a",E:"#222"}
+};
+function shade(hex,amt){
+ const n=parseInt(hex.slice(1),16);
+ let r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+ r=Math.max(0,Math.min(255,r+amt));g=Math.max(0,Math.min(255,g+amt));b=Math.max(0,Math.min(255,b+amt));
+ return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+function spr(p,px,full){
+ if(px===undefined)px=9;
+ const c={...p};
+ if(c.T&&!c.D)c.D=shade(c.T,-40);
+ if(c.H&&!c.HD)c.HD=shade(c.H,-30);
+ let r="";
+ BASE.forEach((row,y)=>[...row].forEach((ch,x)=>{
+   if(ch!=="."&&c[ch]) r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${c[ch]}"/>`;
+ }));
+ if(full) return `<svg viewBox="0 0 8 10" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${r}</svg>`;
+ return `<svg width="${8*px}" height="${10*px}" viewBox="0 0 8 10" aria-hidden="true">${r}</svg>`;
+}
+const av=i=>{const a=T.avatars[i];return {H:a.h,S:"#e8b890",T:a.t,E:"#222"}};
+
+/* ================= STATO ================= */
+const S={
+ scr:"title", i:0, av:0, sc:0, days:5, ob:0, won:[],
+ msg:"", cur:"", step:-1, dead:[], fb:"", hints:0, snd:true,
+ typing:null, typingTimer:null, talk:null, talkNext:null,
+ ex:{hub:"atene",zone:"piazza",x:5,y:4}, flags:{}, cutIdx:0
+};
+let AC=null;
+
+/* ================= AUDIO ================= */
+function playFile(src,vol){
+ if(!src||!S.snd)return false;
+ try{const a=new Audio(src);a.volume=(vol==null?.5:vol);a.play().catch(()=>{});return true;}catch(e){return false;}
+}
+function sfx(name,vol){
+ if(!S.snd)return;
+ if(playFile(AUDIO.sfx[name],vol))return;
+ const map={
+  chains:[140,.18,"square"],crowd:[220,.4,"sawtooth"],wind:[90,.6,"sine"],
+  waves:[110,.5,"sine"],gulls:[900,.15,"sine"],drum:[70,.25,"triangle"],
+  tablet:[900,.28,"square"],blip:[760,.02,"square"],coin:[1200,.1,"square"],door:[300,.12,"square"]
+ };
+ const m=map[name]||[600,.08,"square"];
+ try{
+  AC=AC||new(window.AudioContext||window.webkitAudioContext)();
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.type=m[2];o.frequency.value=m[0];g.gain.value=.05;
+  o.connect(g);g.connect(AC.destination);o.start();
+  if(name==="tablet"){try{o.frequency.exponentialRampToValueAtTime(120,AC.currentTime+.28);}catch(_){}}
+  o.stop(AC.currentTime+m[1]);
+ }catch(e){}
+}
+function beep(f,d){
+ if(d===undefined)d=.12;
+ if(!S.snd)return;
+ if(playFile(AUDIO.sfx.blip,.22))return;
+ try{
+  AC=AC||new(window.AudioContext||window.webkitAudioContext)();
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.type="square";o.frequency.value=f;g.gain.value=.04;
+  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);
+ }catch(e){}
+}
+function setBgm(which){
+ const el=document.getElementById("bgm");if(!el)return;
+ const src=which==="tense"?AUDIO.bgmTense:(which==="none"?"":AUDIO.bgm);
+ if(!src){try{el.pause();}catch(e){}return;}
+ if(el.dataset.src!==src){el.dataset.src=src;el.src=src;el.loop=true;}
+ if(S.snd)el.play().catch(()=>{});
+}
+function tg(){
+ S.snd=!S.snd;
+ const el=document.getElementById("bgm");
+ if(!S.snd){try{el.pause();}catch(e){}}
+ else{setBgm(S.scr==="duel"?"tense":"main");}
+ beep(440);R();
+}
+
+/* ================= HUD & UI ================= */
+const hud=()=>`<div class="hud"><span>GIORNI ${"■".repeat(Math.max(S.days,0))}${"□".repeat(Math.max(0,5-S.days))}</span><span>FRAMMENTI ${S.won.length}/3</span><span>OBOLI ${S.ob}</span></div>`;
+const btn=(t,fn,c)=>`<button class="${c||"go"}" onclick="${fn}">${t}</button>`;
+const bar=()=>`<div class="bar"><button onclick="tg()">SFX: ${S.snd?"SÌ":"NO"}</button></div>`;
+
+/* ================= CUTSCENE SVG ================= */
+function cutAthens(){
+ return `<svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice">
+  <defs>
+   <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f2a35c"/><stop offset=".55" stop-color="#e8c88a"/><stop offset="1" stop-color="#c9b98a"/>
+   </linearGradient>
+   <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3a6fa8"/><stop offset="1" stop-color="#1b3a5c"/>
+   </linearGradient>
+  </defs>
+  <rect width="320" height="160" fill="url(#skyG)"/>
+  <circle cx="248" cy="40" r="16" fill="#ffe9a8" opacity=".85"/>
+  <g opacity=".55">
+   <rect class="smoke" x="70" y="70" width="7" height="7" fill="#e8e0d0" opacity=".5"/>
+   <rect class="smoke" x="90" y="66" width="6" height="6" fill="#e8e0d0" opacity=".4" style="animation-delay:.9s"/>
+   <rect class="smoke" x="150" y="74" width="8" height="8" fill="#e8e0d0" opacity=".4" style="animation-delay:1.7s"/>
+  </g>
+  <polygon points="0,110 40,90 70,102 90,86 120,100 150,84 180,100 200,92 230,106 260,90 290,104 320,94 320,160 0,160" fill="#5a4630" stroke="#2b1d0e" stroke-width="1"/>
+  <g fill="#7a6244">
+   <rect x="30" y="98" width="10" height="16"/><rect x="46" y="94" width="12" height="20"/>
+   <rect x="104" y="96" width="9" height="18"/><rect x="118" y="92" width="13" height="22"/>
+   <rect x="186" y="98" width="10" height="18"/><rect x="200" y="94" width="12" height="22"/>
+   <rect x="264" y="96" width="11" height="18"/>
+   <rect x="146" y="80" width="4" height="30" fill="#e8e0c8"/>
+   <polygon points="140,80 156,80 148,68" fill="#e8e0c8"/>
+  </g>
+  <rect y="118" width="320" height="42" fill="url(#seaG)"/>
+  <g class="wave" fill="#8fc4e8" opacity=".35">
+   <rect x="0" y="126" width="10" height="2"/><rect x="20" y="132" width="12" height="2"/>
+   <rect x="44" y="128" width="9" height="2"/><rect x="66" y="136" width="11" height="2"/>
+   <rect x="92" y="128" width="10" height="2"/><rect x="118" y="134" width="12" height="2"/>
+   <rect x="146" y="127" width="9" height="2"/><rect x="170" y="135" width="11" height="2"/>
+   <rect x="198" y="129" width="10" height="2"/><rect x="224" y="134" width="12" height="2"/>
+   <rect x="252" y="127" width="9" height="2"/><rect x="278" y="133" width="11" height="2"/>
+   <rect x="304" y="129" width="12" height="2"/>
+   <rect x="320" y="126" width="10" height="2"/><rect x="340" y="132" width="12" height="2"/>
+  </g>
+  <g class="bob">
+   <polygon points="60,112 92,112 86,120 66,120" fill="#4a2c14"/>
+   <rect x="74" y="92" width="2" height="20" fill="#3a2010"/>
+   <polygon points="76,92 96,98 76,106" fill="#c0392b"/>
+  </g>
+ </svg>`;
+}
+function cutShip(dark){
+ const sail=dark?"#1b1b1b":"#c0392b";
+ const sky1=dark?"#1b1b3a":"#f2a35c";
+ const sky2=dark?"#3a2a4a":"#e8c88a";
+ return `<svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice">
+  <defs><linearGradient id="cs" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="${sky1}"/><stop offset="1" stop-color="${sky2}"/>
+  </linearGradient></defs>
+  <rect width="320" height="160" fill="url(#cs)"/>
+  ${dark?"":`<circle cx="60" cy="46" r="18" fill="#ffe9a8" opacity=".8"/>`}
+  <rect y="104" width="320" height="56" fill="${dark?"#0e1a2a":"#2a5a88"}"/>
+  <g class="wave" opacity=".4" fill="#9fd0f0">
+   <rect x="0" y="118" width="12" height="2"/><rect x="26" y="126" width="10" height="2"/>
+   <rect x="50" y="120" width="13" height="2"/><rect x="78" y="128" width="11" height="2"/>
+   <rect x="104" y="119" width="12" height="2"/><rect x="130" y="127" width="10" height="2"/>
+   <rect x="156" y="121" width="13" height="2"/><rect x="184" y="129" width="11" height="2"/>
+   <rect x="210" y="120" width="12" height="2"/><rect x="236" y="126" width="10" height="2"/>
+   <rect x="262" y="122" width="13" height="2"/><rect x="290" y="128" width="11" height="2"/>
+  </g>
+  <g class="bob">
+   <polygon points="118,110 202,110 190,124 130,124" fill="#3a2010"/>
+   <rect x="158" y="66" width="3" height="46" fill="#2b1d0e"/>
+   <polygon points="161,68 214,80 161,98" fill="${sail}"/>
+   <polygon points="158,68 118,80 158,98" fill="${sail}" opacity=".85"/>
+   <rect x="120" y="104" width="80" height="4" fill="#5a3a1a"/>
+  </g>
+ </svg>`;
+}
+
+/* ================= SCHERMATE ================= */
+const SC={
+ title:()=>`<h1>${T.title}</h1><div class="c">${spr(PEOPLE.socrate,14)}</div><p class="c sm">${T.sub}</p>${btn(T.ui.start,"go('cut1')")}`,
+
+ cut1:()=>{
+  const txt=T.cutIntro[S.cutIdx]||"";
+  const last=S.cutIdx>=T.cutIntro.length-1;
+  return `<div class="cut">${cutAthens()}</div>
+   <div class="cut-cap">${esc(txt)}</div>
+   ${btn(last?T.ui.cutLast:T.ui.cutNext,"cutAdvance()")}`;
+ },
+
+ intro:()=>{
+  const s=T.intro[S.i];
+  return `<div class="who">${spr(PEOPLE[s.who],9)}<div><h2>${esc(s.name)}</h2></div></div>
+   <div class="box"><div class="type" data-type="${esc(s.text)}"></div></div>
+   ${typeControl()}
+   ${btn(T.ui.next,"nextIntro()")}`;
+ },
+
+ pick:()=>`<h2>${T.ui.choose}</h2>
+  <div class="row">
+   ${T.avatars.map((a,i)=>`<button class="${S.av==i?"sel":""}" onclick="S.av=${i};beep(500);R()">${spr(av(i),6)}<br>${a.n.split("—")[0]}</button>`).join("")}
+  </div>
+  <div class="player-card">${spr(av(S.av),7)}<div><b>IL TUO PERSONAGGIO</b><br><span class="sm">${esc(T.avatars[S.av].n)}</span></div></div>
+  <h2>${T.ui.school}</h2>
+  ${T.schools.map((s,i)=>`<button class="${S.sc==i?"sel":""}" onclick="S.sc=${i};beep(500);R()">${s.n}<br><span class="sm">${s.f}<br>${s.p}</span></button>`).join("")}
+  <p class="sm">${T.powerNote}</p>
+  ${btn(T.ui.go,"startExplore()")}`,
+
+ explore:()=>{
+  const z=curZone();
+  const rows=z.tiles.length, cols=z.tiles[0].length;
+  let cells="";
+  for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)cells+=cellHtml(z.tiles[y][x],x,y,z);
+  const px=(S.ex.x*100/cols)+"%", py=(S.ex.y*100/rows)+"%";
+  return hud()
+   +`<div class="hub-title">${esc(z.title)}</div>`
+   +(z.objective?`<div class="hub-obj">▸ ${esc(z.objective)}</div>`:"")
+   +`<div class="hub-wrap" style="background:${z.sky}">`
+   +`<div class="hub" style="grid-template-columns:repeat(${cols},1fr)">${cells}`
+   +`<div class="player" id="pl" style="left:${px};top:${py};width:${100/cols}%;height:${100/rows}%">${spr(av(S.av),0,true)}</div>`
+   +`</div>`
+   +(z.fumes?`<div style="position:absolute;inset:0;pointer-events:none">${fumes()}</div>`:"")
+   +`</div>`
+   +`<div class="dpad">
+     <button class="sp"></button><button onclick="mv(0,-1)">▲</button><button class="sp"></button>
+     <button onclick="mv(-1,0)">◀</button><button class="sp"></button><button onclick="mv(1,0)">▶</button>
+     <button class="sp"></button><button onclick="mv(0,1)">▼</button><button class="sp"></button>
+    </div>`
+   +(S.msg?`<div class="box sm">${esc(S.msg)}</div>`:"")
+   +`<p class="sm c" style="opacity:.7">Frecce / WASD / D-pad per muoverti.</p>`;
+ },
+
+ dlg:()=>{
+  const seq=TALK[S.talk.key], l=seq[S.talk.i];
+  const p=PEOPLE[l.who]||av(S.av);
+  return `<div class="who">${spr(p,9)}<div><h2>${esc(l.name)}</h2></div></div>
+   <div class="box"><div class="type" data-type="${esc(l.text)}"></div></div>
+   ${typeControl()}
+   ${btn(S.talk.i<seq.length-1?"AVANTI":"FINE","nextTalk()")}`;
+ },
+
+ map:()=>{
+  const m=T.map,st=m.stops;
+  const pin=(s,i)=>{
+   const d=S.won.includes(s.id);
+   const c=d?"#6fcf7f":s.id=="delfi"?"#c9a0e0":"#f2c14e";
+   const l=s.l?"end":"start",dx=s.l?-9:9;
+   return `<g onclick="visit('${s.id}')" style="cursor:pointer">
+     <rect x="${s.x-7}" y="${s.y-7}" width="14" height="14" fill="${c}" stroke="#0b0b18" stroke-width="2" rx="2"/>
+     <text x="${s.x}" y="${s.y+3}" font-size="7" text-anchor="middle" fill="#1b1b2f" stroke="none" font-weight="bold">${i+1}</text>
+     <text x="${s.x+dx}" y="${s.y-2}" font-size="7" text-anchor="${l}" fill="#f2c14e">${s.theme.toUpperCase()}</text>
+     <text x="${s.x+dx}" y="${s.y+7}" font-size="5" text-anchor="${l}" fill="#f4f0e0">${s.n} - ${s.who}</text>
+   </g>`;
+  };
+  const svg=`<svg class="map" viewBox="0 0 320 300" role="img" aria-label="Mappa della Grecia antica">
+   <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2a5a88"/><stop offset="1" stop-color="#12304f"/>
+   </linearGradient></defs>
+   <rect width="320" height="300" fill="url(#mg)"/>
+   <g class="wave" opacity=".22" fill="#9fd0f0">
+    <rect x="0" y="40" width="14" height="2"/><rect x="40" y="70" width="12" height="2"/>
+    <rect x="90" y="52" width="14" height="2"/><rect x="140" y="86" width="12" height="2"/>
+    <rect x="200" y="60" width="14" height="2"/><rect x="250" y="96" width="12" height="2"/>
+    <rect x="0" y="180" width="14" height="2"/><rect x="60" y="220" width="12" height="2"/>
+    <rect x="150" y="200" width="14" height="2"/><rect x="230" y="240" width="12" height="2"/>
+    <rect x="20" y="280" width="14" height="2"/><rect x="120" y="290" width="12" height="2"/>
+   </g>
+   <g fill="#c9b36a" stroke="#6b5a2a" stroke-width="2" stroke-linejoin="miter">
+    <polygon points="0,150 35,168 52,210 32,252 12,232 0,200"/>
+    <polygon points="70,30 190,30 250,50 235,75 200,90 185,105 190,125 170,140 150,140 145,165 100,160 95,135 105,115 85,100 80,70 65,50"/>
+    <polygon points="105,165 140,165 168,178 176,198 160,226 130,236 104,216 98,190"/>
+    <polygon points="290,20 320,20 320,250 300,262 284,222 296,180 274,150 286,110 268,70"/>
+    <polygon points="110,268 200,262 206,276 120,284"/>
+    <polygon points="172,86 196,100 190,107 169,93"/>
+    <rect x="205" y="150" width="8" height="8"/><rect x="225" y="175" width="10" height="8"/>
+    <rect x="190" y="205" width="8" height="8"/><rect x="235" y="215" width="12" height="8"/>
+   </g>
+   ${st.map(pin).join("")}
+  </svg>`;
+  const row=(s,i)=>{
+   const d=S.won.includes(s.id);
+   const t=d?m.done:s.id=="delfi"?m.pizia:m.todo;
+   return `<button class="stop" onclick="visit('${s.id}')">
+     <span>${i+1}. ${s.n.toUpperCase()}<br><span class="sm">${s.theme}: ${s.q}</span></span>
+     <span class="st ${d?"ok":""}">${t}</span>
+   </button>`;
+  };
+  return hud()
+   +`<div class="player-card">${spr(av(S.av),7)}<div><b>${T.avatars[S.av].n.split("—")[0]}</b> <span class="sm">· ${T.schools[S.sc].n}</span><br><span class="sm">${T.schools[S.sc].p}</span></div></div>`
+   +`<h2>${m.title}</h2><p class="sm">${m.hint}</p>`
+   +svg
+   +(S.msg?`<div class="box sm">${esc(S.msg)}</div>`:"")
+   +st.map(row).join("")
+   +(S.won.length>=3?btn(m.finish,"go('fin')"):"");
+ },
+
+ delfi:()=>hud()
+  +`<div class="who">${spr(PEOPLE.pizia,9)}<div><h2>Delfi</h2></div></div>`
+  +`<div class="box"><div class="type" data-type="${esc(T.ui.pizia)}"></div></div>`
+  +typeControl()
+  +`<p class="sm">${T.ui.hints} <span class="hint-dots">${"◆".repeat(S.hints)||"—"}</span> ${T.ui.hintInfo}</p>`
+  +(S.ob>0?btn(T.ui.buy,"buy()"):`<div class="box no">${T.ui.piziaNo}</div>`)
+  +btn(T.ui.back,"go('map')",""),
+
+ duel:()=>{
+  const d=D();
+  if(S.step<0)return hud()
+   +`<div class="who">${spr(PEOPLE[d.sp],9)}<div><h2>${esc(d.n)}</h2></div></div>`
+   +`<div class="box"><div class="type" data-type="${esc(d.card)}"></div></div>`
+   +typeControl()
+   +btn(T.ui.fight,"startFight()");
+  const st=d.steps[S.step];
+  const tab=d.tablet?`<div class="wax"><b>TAVOLETTA</b>${d.tablet.map(x=>`<p>${esc(x)}</p>`).join("")}</div>`:"";
+  const left=st.ans.some((a,i)=>!a.ok&&!S.dead.includes(i));
+  return hud()
+   +`<p class="sm">${T.ui.step} ${S.step+1}/${d.steps.length}</p>`
+   +tab
+   +`<div class="who">${spr(PEOPLE.socrate,6)}<div class="sm"><b>Socrate:</b> <span class="type" data-type="${esc(st.q)}"></span></div></div>`
+   +typeControl()
+   +`<div class="player-card">${spr(av(S.av),5)}<div class="sm"><b>${T.avatars[S.av].n.split("—")[0]}:</b> scegli la risposta che mette alla prova l'argomento.</div></div>`
+   +(S.fb?`<div class="box no">✘ −1 giorno. ${esc(S.fb)}</div>`:"")
+   +st.ans.map((a,i)=>S.dead.includes(i)?"":btn(a.t,`ans(${i})`,"")).join("")
+   +(S.hints>0&&left?btn(T.ui.hintBtn+" ("+S.hints+")","useHint()"):"");
+ },
+
+ frag:()=>{
+  const d=D();
+  return hud()
+   +`<h1 style="font-size:18px">${T.ui.fragT}</h1>
+     <div class="papyrus glow">
+      <div class="frag-num">FRAMMENTO ${S.won.length} DI 3 — DIALOGHI DI PLATONE</div>
+      <div class="frag-txt">«${esc(d.frag)}»</div>
+     </div>
+     <p class="c ok">+${d.reward} oboli</p>`
+   +btn(T.ui.next,"go('map')");
+ },
+
+ fin:()=>{
+  if(S.won.length<3)return hud()+`<div class="box no">Servono tutti e 3 i frammenti.</div>`+btn(T.ui.back,"go('map')","");
+  return hud()
+   +`<div class="who">${spr(PEOPLE.socrate,9)}<div><h2>Socrate</h2></div></div>`
+   +`<div class="player-card">${spr(av(S.av),6)}<div class="sm"><b>${T.avatars[S.av].n.split("—")[0]}</b> · ${T.schools[S.sc].n}</div></div>`
+   +`<div class="box">${esc(T.ui.fin)}</div>`
+   +btn(T.ui.tribunale,"go('finA')")
+   +(S.ob>=30?btn(T.ui.esilio,"startDuel('soc')"):`<p class="sm">${T.ui.finNote}</p>`);
+ },
+
+ finA:()=>endScr("A"),
+ finB:()=>endScr("B"),
+
+ lose:()=>`<div class="cut">${cutShip(true)}</div>
+  <div class="cut-cap">${esc(T.ui.lose)}</div>`
+  +hud()
+  +`<div class="box blk c">Il processo inizia...</div>`
+  +btn(T.ui.restart,"restart()")
+};
+
+/* ================= CELLE ================= */
+function cellHtml(ch,x,y,z){
+ const ground=z.ground||"#c9b98a";
+ let bg=ground,inner="";
+ if(ch==="#"){
+  bg="#4a4a5a";
+  inner=`<svg class="bg" viewBox="0 0 8 8" preserveAspectRatio="none"><rect width="8" height="8" fill="#4a4a5a"/><rect x="0" y="0" width="8" height="1" fill="#5a5a6a"/><rect x="0" y="4" width="8" height="1" fill="#3a3a4a"/><rect x="3" y="0" width="1" height="4" fill="#3a3a4a"/><rect x="6" y="4" width="1" height="4" fill="#3a3a4a"/></svg>`;
+ } else if(ch==="T"){
+  bg="#8a9a5a";
+  inner=`<svg class="bg" viewBox="0 0 8 8" preserveAspectRatio="none"><rect width="8" height="8" fill="#a8b878"/><rect x="3" y="5" width="2" height="3" fill="#6b4a1e"/><circle cx="4" cy="3" r="3" fill="#3a6a2a"/><circle cx="3" cy="2" r="2" fill="#5a8a4a"/></svg>`;
+ } else if(ch==="~"){
+  bg="#3a6fa8";
+  inner=`<svg class="bg" viewBox="0 0 8 8" preserveAspectRatio="none"><rect width="8" height="8" fill="#3a6fa8"/><rect x="0" y="2" width="8" height="1" fill="#6fa8d8" opacity=".6"/><rect x="0" y="5" width="8" height="1" fill="#6fa8d8" opacity=".4"/></svg>`;
+ } else if(ch==="D"){
+  inner=`<svg class="bg" viewBox="0 0 8 8" preserveAspectRatio="none"><rect width="8" height="8" fill="${ground}"/><rect x="1" y="1" width="6" height="7" fill="#6b4a1e" stroke="#3a2010" stroke-width=".4"/><rect x="2" y="2" width="4" height="2" fill="#8a6a3a" opacity=".6"/><circle cx="6" cy="5" r=".6" fill="#f2c14e"/></svg>`;
+ } else if(ch==="X"){
+  bg="#8a7a5a";
+  inner=`<svg class="bg" viewBox="0 0 8 8" preserveAspectRatio="none"><rect width="8" height="8" fill="${ground}"/><polygon points="4,1 6.5,5 4,4 1.5,5" fill="#f2c14e" stroke="#1b1b2f" stroke-width=".4"/><rect x="3.4" y="5" width="1.2" height="2.5" fill="#1b1b2f"/></svg>`;
+ } else {
+  bg=(x+y)%2===0?ground:shade(ground,-8);
+  inner=`<svg class="bg" viewBox="0 0 8 8" preserveAspectRatio="none"><rect width="8" height="8" fill="${bg}"/></svg>`;
+ }
+ let npc="";
+ if(ch==="S")npc=spr(PEOPLE.socrate,0,true);
+ else if(ch==="P")npc=spr(PEOPLE.platone,0,true);
+ else if(ch==="G")npc=spr(PEOPLE.guard,0,true);
+ else if(ch==="Z")npc=spr(PEOPLE.pizia,0,true);
+ else if(ch==="F"&&z.boss)npc=spr(PEOPLE[T.duels[z.boss].sp],0,true);
+ return `<div class="cell" style="background:${bg}">${inner}${npc?`<div class="npc">${npc}</div>`:""}</div>`;
+}
+function fumes(){
+ let s="";
+ const pts=[[30,60],[45,55],[60,62],[38,68],[52,70]];
+ pts.forEach((p,i)=>{
+  s+=`<div style="position:absolute;left:${p[0]}%;top:${p[1]}%;width:10px;height:10px;border-radius:50%;background:#e8d8f0;opacity:.5;filter:blur(2px);animation:smoke 3.2s ease-out infinite;animation-delay:${i*.5}s"></div>`;
+ });
+ return s;
+}
+function curZone(){return HUBS[S.ex.hub][S.ex.zone];}
+
+/* ================= MOVIMENTO ================= */
+function mv(dx,dy){
+ if(S.scr!=="explore")return;
+ const z=curZone();
+ const nx=S.ex.x+dx, ny=S.ex.y+dy;
+ const row=z.tiles[ny];if(!row)return;
+ const ch=row[nx];if(!ch)return;
+ if(ch==="#"||ch==="T"||ch==="~"){sfx("door",.15);beep(160,.04);return;}
+ if("SPGZF".includes(ch)){interact(ch);return;}
+ S.ex.x=nx;S.ex.y=ny;
+ beep(620,.02);
+ const p=z.portals&&z.portals[nx+","+ny];
+ if(p){
+  sfx("door",.25);
+  if(p.map){go("map");return;}
+  S.ex.zone=p.zone;S.ex.x=p.x;S.ex.y=p.y;
+  R();scrollTo(0,0);return;
+ }
+ const el=document.getElementById("pl");
+ if(el){
+  const cols=z.tiles[0].length,rows=z.tiles.length;
+  el.style.left=(S.ex.x*100/cols)+"%";
+  el.style.top=(S.ex.y*100/rows)+"%";
+ }
+}
+function interact(ch){
+ if(ch==="S"){
+  if(!S.flags.metSocrate) talk("socrate_cell",()=>{S.flags.metSocrate=1;});
+  else talk("socrate_cell",null);
+  return;
+ }
+ if(ch==="P"){
+  if(!S.flags.gotRing){talk("plato_inn",()=>{S.flags.gotRing=1;floatText(T.ui.ring);sfx("coin",.5);});}
+  else talk("plato_inn",null);
+  return;
+ }
+ if(ch==="G"){talk("guard",null);return;}
+ if(ch==="Z"){go("delfi");return;}
+ if(ch==="F"){
+  const b=curZone().boss;
+  if(b)startDuel(b);
+ }
+}
+function startExplore(){S.ex={hub:"atene",zone:"piazza",x:5,y:4};S.msg="";go("explore");}
+function enterHub(hub,zone,x,y){S.ex={hub,zone,x,y};S.msg="";go("explore");}
+
+document.addEventListener("keydown",e=>{
+ if(S.scr!=="explore")return;
+ const k=e.key.toLowerCase();
+ if(k==="arrowup"||k==="w"){e.preventDefault();mv(0,-1);}
+ else if(k==="arrowdown"||k==="s"){e.preventDefault();mv(0,1);}
+ else if(k==="arrowleft"||k==="a"){e.preventDefault();mv(-1,0);}
+ else if(k==="arrowright"||k==="d"){e.preventDefault();mv(1,0);}
+});
+
+/* ================= LOGICA ================= */
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-function typeControl(){return `<div class="typing-actions"><button onclick="skipTyping()">▶ TESTO COMPLETO</button></div>`}
+function typeControl(){return `<div class="typing-actions"><button onclick="skipTyping()">${T.ui.skip}</button></div>`}
 function startTyping(){
  if(S.typingTimer)clearInterval(S.typingTimer);
  const els=[...document.querySelectorAll("[data-type]")];
- if(!els.length){S.typing=null;return}
- let n=0, total=els.reduce((a,e)=>a+e.dataset.type.length,0), done=0;
+ if(!els.length){S.typing=null;return;}
+ let n=0;
  S.typing={done:false};
  els.forEach(e=>e.textContent="");
- const step=()=>{
-   if(!els.length)return;
-   if(n>=els.length){S.typing.done=true;clearInterval(S.typingTimer);return}
-   const e=els[n], full=e.dataset.type, pos=e.textContent.length;
-   if(pos<full.length){e.textContent=full.slice(0,pos+1);done++;beep(760,.018)}
-   else{n++}
- };
- S.typingTimer=setInterval(step,22);
+ S.typingTimer=setInterval(()=>{
+  if(n>=els.length){S.typing.done=true;clearInterval(S.typingTimer);return;}
+  const e=els[n],full=e.dataset.type,pos=e.textContent.length;
+  if(pos<full.length){e.textContent=full.slice(0,pos+1);beep(760,.018);}
+  else n++;
+ },22);
 }
 function skipTyping(){
  if(!S.typing||S.typing.done)return;
@@ -163,23 +731,98 @@ function skipTyping(){
  document.querySelectorAll("[data-type]").forEach(e=>e.textContent=e.dataset.type);
  S.typing.done=true;
 }
-function R(){document.getElementById("app").innerHTML=bar()+SC[S.scr]();startTyping()}
-const bar=()=>`<div class="bar"><button onclick="tg()">SFX: ${S.snd?"SÌ":"NO"}</button></div>`;
-function visit(id){if(id=="delfi")go("delfi");else if(S.won.includes(id)){S.msg="Hai già questo frammento.";beep(300);R()}else startDuel(id)}
-Object.assign(PEOPLE,{pizia:{H:"#7a3b8a",S:"#e8b890",T:"#c9a0e0",E:"#222"},eraclito:{H:"#555",S:"#e8b890",T:"#a0522d",E:"#222"},protagora:{H:"#222",S:"#e8b890",T:"#d8c060",E:"#222"}});
+function R(){
+ document.getElementById("app").innerHTML=bar()+SC[S.scr]();
+ startTyping();
+ setBgm(S.scr==="duel"?"tense":(S.scr==="lose"||S.scr==="finA"||S.scr==="finB")?"none":"main");
+}
+function go(s){S.scr=s;S.msg="";beep(520);R();scrollTo(0,0);}
+function cutAdvance(){
+ S.cutIdx++;
+ if(S.cutIdx>=T.cutIntro.length){S.cutIdx=0;go("intro");return;}
+ beep(520);R();
+}
+function nextIntro(){
+ S.i++;
+ if(S.i>=T.intro.length)go("pick");
+ else{beep(520);R();}
+}
+function talk(key,next){S.talk={key,i:0};S.talkNext=next||null;S.scr="dlg";beep(520);R();scrollTo(0,0);}
+function nextTalk(){
+ S.talk.i++;
+ if(S.talk.i>=TALK[S.talk.key].length){
+  const n=S.talkNext;S.talkNext=null;S.talk=null;
+  if(n)n();
+  S.scr="explore";R();scrollTo(0,0);
+ } else {beep(520);R();}
+}
 const D=()=>T.duels[S.cur];
-function go(s){S.scr=s;S.msg="";if(s=="intro")S.i=0;beep(520);R();scrollTo(0,0)}
-function nextIntro(){S.i++;if(S.i>=T.intro.length)go("pick");else{beep(520);R()}}
-function startDuel(id){S.cur=id;S.step=-1;S.dead=[];S.fb="";S.scr="duel";beep(520);R();scrollTo(0,0)}
-function buy(){if(S.ob>0){S.ob--;S.hints++;beep(660)}R()}
-function useHint(){const k=D().steps[S.step].ans.findIndex((a,i)=>!a.ok&&!S.dead.includes(i));if(k>=0&&S.hints>0){S.hints--;S.dead.push(k);beep(500)}R()}
-function ans(i){const d=D();if(!d||S.step<0||!d.steps[S.step])return;const st=d.steps[S.step];if(st.ans[i]===undefined||S.days<=0)return;
- if(st.ans[i].ok){beep(300,.1);setTimeout(()=>beep(200,.25),120);S.step++;S.dead=[];S.fb="";
-  if(S.step>=d.steps.length){if(S.cur=="soc")S.scr="finB";else{S.ob+=d.reward;S.won.push(S.cur);S.scr="frag"}beep(880,.3)}}
- else{S.days--;S.dead.push(i);S.fb=st.why;beep(150,.25);if(S.days<=0)S.scr="lose"}
- R();scrollTo(0,0)}
-function endScr(k){const e=T.end[k],bx=t=>`<div class="box">${t}</div>`;return hud()+e.a.map(bx).join("")+`<div class="box blk c">${T.ui.fade}</div><div class="fade">${e.b.map(bx).join("")}</div>`+btn(T.ui.restart,"restart()")}
-function restart(){S.days=5;S.ob=0;S.won=[];S.hints=0;go("title")}
+function startDuel(id){
+ S.cur=id;S.step=-1;S.dead=[];S.fb="";S.scr="duel";
+ sfx("drum",.4);beep(520);R();scrollTo(0,0);
+}
+function startFight(){S.step=0;beep(520);R();scrollTo(0,0);}
+function buy(){if(S.ob>0){S.ob--;S.hints++;sfx("coin",.4);beep(660);}R();}
+function useHint(){
+ const st=D().steps[S.step];
+ const k=st.ans.findIndex((a,i)=>!a.ok&&!S.dead.includes(i));
+ if(k>=0&&S.hints>0){S.hints--;S.dead.push(k);beep(500);}
+ R();
+}
+function floatText(txt){
+ const d=document.createElement("div");
+ d.className="float-up";d.textContent=txt;
+ document.body.appendChild(d);
+ setTimeout(()=>d.remove(),2200);
+}
+function ans(i){
+ const d=D();
+ if(!d||S.step<0||!d.steps[S.step])return;
+ const st=d.steps[S.step];
+ if(st.ans[i]===undefined||S.days<=0)return;
+ if(st.ans[i].ok){
+  beep(300,.1);setTimeout(()=>beep(200,.25),120);
+  S.step++;S.dead=[];S.fb="";
+  if(S.step>=d.steps.length){
+   if(S.cur==="soc")S.scr="finB";
+   else{S.ob+=d.reward;S.won.push(S.cur);S.scr="frag";floatText("+"+d.reward+" OBOLI");sfx("coin",.6);}
+   beep(880,.3);
+  }
+ } else {
+  S.days--;S.dead.push(i);S.fb=st.why;
+  sfx("tablet",.5);beep(150,.25);
+  const app=document.getElementById("app");
+  app.classList.add("shake");
+  setTimeout(()=>app.classList.remove("shake"),420);
+  if(S.days<=0)S.scr="lose";
+ }
+ R();scrollTo(0,0);
+}
+function endScr(k){
+ const e=T.end[k];
+ const bx=t=>`<div class="box">${esc(t)}</div>`;
+ const cut=k==="A"?cutAthens():cutShip(false);
+ return `<div class="cut">${cut}</div>`
+  +hud()
+  +e.a.map(bx).join("")
+  +`<div class="box blk c">${T.ui.fade}</div>`
+  +`<div class="fade">${e.b.map(bx).join("")}</div>`
+  +btn(T.ui.restart,"restart()");
+}
+function restart(){
+ S.days=5;S.ob=0;S.won=[];S.hints=0;S.flags={};
+ S.i=0;S.cutIdx=0;S.talk=null;S.talkNext=null;
+ S.step=-1;S.dead=[];S.fb="";S.cur="";S.msg="";
+ go("title");
+}
+function visit(id){
+ if(S.won.includes(id)){S.msg="Hai già questo frammento.";beep(300);R();return;}
+ if(id==="delfi")enterHub("delfi","santuario",4,4);
+ else if(id==="pit")enterHub("crotone","citta",4,4);
+ else if(id==="era")enterHub("efeso","citta",4,4);
+ else if(id==="pro")enterHub("agora","citta",4,4);
+}
+
+/* avvia */
 R();
 </script></body></html>
-</html>
