@@ -43,8 +43,7 @@
   .stat.earn .val { color: var(--good); }
 
   .brief { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
-  .brief-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .brief-head > div:nth-child(2) { min-width: 0; flex: 1 1 160px; }
+  .brief-head { display: flex; align-items: center; gap: 12px; }
   .avatar { width: 56px; height: 56px; border-radius: 12px; display: grid; place-items: center; background: var(--bg); flex-shrink: 0; overflow:hidden; image-rendering:pixelated; }
   .avatar svg { width:100%; height:100%; display:block; shape-rendering:crispEdges; }
   .client { font-weight: 700; font-size: 1.1rem; }
@@ -54,7 +53,6 @@
   .character-card .name { font-size:.98rem; font-weight:800; margin-top:2px; }
   .character-card .desc { color:var(--muted); font-size:.75rem; line-height:1.25; margin-top:2px; }
   .temper { display:none; }
-  .character-card .name:empty::after { content: "In attesa…"; color: var(--muted); }
 
   .meters { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
   .meter .top { display: flex; justify-content: space-between; font-size: .85rem; margin-bottom: 6px; }
@@ -115,7 +113,6 @@
   button:active { transform: scale(.97); }
   button:disabled { opacity: .4; cursor: not-allowed; }
   button:not(:disabled):hover { filter: brightness(1.08); }
-  button:focus-visible { outline: 3px solid #111; outline-offset: 3px; }
   .rev { background: var(--accent); color: #fff; }
   .ship { background: var(--good); color: #fff; }
   .keys { text-align: center; color: var(--muted); font-size: .78rem; margin-top: 8px; }
@@ -126,7 +123,7 @@
 
   .overlay { position: fixed; inset: 0; background: rgba(29,27,25,.55); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
   .overlay.show { display: flex; }
-  .modal { background: var(--paper); border-radius: 16px; padding: 24px; max-width: 420px; width: 100%; text-align: center; animation: pop .25s ease both; }
+  .modal { background: var(--paper); border-radius: 16px; padding: 24px; max-width: 720px; width: 100%; text-align: center; animation: pop .25s ease both; }
   .modal h2 { margin: 0 0 6px; }
   .modal p { color: var(--muted); line-height: 1.5; }
   .modal .big { font-size: 2.3rem; font-weight: 800; margin: 6px 0; font-variant-numeric: tabular-nums; }
@@ -146,6 +143,34 @@
     .meters { grid-template-columns: 1fr; }
     .temper { display: none; }
   }
+
+  /* Visual refresh */
+  :root { --violet:#6d4aff; --violet-dark:#5035ca; --gold:#f4b942; --shadow:0 16px 38px rgba(49,38,30,.10); }
+  body { background: radial-gradient(circle at 12% 6%, #fff8ee 0, transparent 28%), radial-gradient(circle at 90% 0%, #ede9ff 0, transparent 31%), var(--bg); }
+  header { padding: 18px 20px; border:1px solid rgba(226,221,213,.9); border-radius:18px; background:rgba(255,255,255,.72); box-shadow:var(--shadow); }
+  h1 span { color:var(--violet); }
+  .stat, .brief, .studio-card, .log, details { box-shadow:0 7px 18px rgba(49,38,30,.055); }
+  .brief, .studio-card { overflow:hidden; }
+  .brief { border-top:4px solid var(--violet); }
+  .studio-card { border-top:4px solid var(--gold); }
+  .character-card { background:linear-gradient(135deg,#faf9ff,#fff); border-color:#ded7ff; box-shadow:0 5px 12px rgba(93,70,190,.08); }
+  .character-card .name { color:var(--violet-dark); }
+  .log { height:360px; background:linear-gradient(180deg,#fff 0%,#faf9ff 100%); border-color:#ded7ff; }
+  .log::before { content:"Dialogo con il cliente"; display:block; align-self:stretch; padding:0 0 8px; color:var(--muted); font-size:.72rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase; border-bottom:1px solid var(--line); }
+  .bubble.me { background:linear-gradient(135deg,var(--violet),var(--violet-dark)); box-shadow:0 5px 12px rgba(80,53,202,.22); }
+  .bubble.client { background:#fff; border:1px solid var(--line); box-shadow:0 3px 9px rgba(49,38,30,.05); }
+  .rev { background:linear-gradient(135deg,var(--violet),var(--violet-dark)); box-shadow:0 7px 15px rgba(80,53,202,.24); }
+  .ship { background:linear-gradient(135deg,#36af6b,#237f52); box-shadow:0 7px 15px rgba(35,127,82,.21); }
+  .studio-art { background:linear-gradient(180deg,#f7e9d5,#d4b99e); border:2px solid #c9a98b; box-shadow:inset 0 0 0 5px rgba(255,255,255,.25); }
+  .studio-hint { background:#fff9ec; border:1px solid #f1dfbc; border-radius:8px; padding:7px 10px; }
+  .studio-compare { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:14px 0 4px; text-align:left; }
+  .studio-shot { border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; }
+  .studio-shot h3 { margin:0; padding:9px 10px; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; background:#faf9f7; color:var(--muted); }
+  .studio-shot.after h3 { background:#f0edff; color:var(--violet-dark); }
+  .studio-shot svg { display:block; width:100%; height:auto; image-rendering:pixelated; }
+  .studio-outcome { margin:12px 0 0; padding:10px 12px; border-radius:10px; font-size:.9rem; color:var(--muted); background:var(--bg); }
+  @media (max-width: 520px) { .studio-compare { grid-template-columns:1fr; } .log { height:280px; } }
+
 </style>
 </head>
 <body>
@@ -169,12 +194,12 @@
     <div class="brief-head">
       <div class="avatar" id="avatar">🍕</div>
       <div>
-        <div class="client" id="client" aria-live="polite"></div>
-        <div class="job" id="job" aria-live="polite"></div>
+        <div class="client" id="client"></div>
+        <div class="job" id="job"></div>
       </div>
       <div class="character-card">
         <div class="eyebrow">Tipo di carattere</div>
-        <div class="name" id="temperName" aria-live="polite"></div>
+        <div class="name" id="temperName"></div>
         <div class="desc" id="temperDesc"></div>
       </div>
       <div class="temper" id="temper"></div>
@@ -209,7 +234,7 @@
     </section>
     </div>
     <div class="right-col">
-      <section class="log" id="log" aria-live="polite" aria-label="Finestra di dialogo"></section>
+      <section class="log" id="log" aria-live="polite" aria-label="Dialogo con il cliente"></section>
       <section class="actions">
         <button class="rev" id="revBtn">✏️ Un'altra revisione</button>
         <button class="ship" id="shipBtn">📦 Consegna e fattura</button>
@@ -413,9 +438,10 @@
       el.mBig.textContent = eur(s.bank);
       el.mText.textContent = verdict(s.bank) + (record ? "" : ` Il tuo record è ${eur(best)}.`);
     }
+    const furnished = s.history.filter(h => !h.fail && h.got > 0).length;
     el.mExtra.innerHTML = '<div class="summary">' + s.history.map(h =>
       `<div><span>${h.c.ico} ${h.c.name} · ${h.revs} rev.</span><b style="color:${h.fail ? "var(--bad)" : "var(--good)"}">${h.fail ? "cestinato" : eur(h.got)}</b></div>`
-    ).join("") + "</div>";
+    ).join("") + "</div>" + studioComparison(furnished) + `<p class="studio-outcome">Il tuo studio ha guadagnato <b>${furnished} ${furnished === 1 ? "arredo" : "arredi"}</b> in questa partita.</p>`;
     el.mBtn.textContent = "Riapri lo studio";
     el.mBtn.onclick = () => { hide(); newGame(); };
     render();
@@ -479,23 +505,34 @@
 
   function studioSvg(furniture) {
     const items = [
-      `<rect x="10" y="174" width="82" height="12" fill="#6b4a35"/><rect x="22" y="186" width="8" height="34" fill="#5a3a25"/><rect x="72" y="186" width="8" height="34" fill="#5a3a25"/><rect x="18" y="154" width="66" height="20" fill="#d9ad86"/>`, // desk
-      `<rect x="142" y="116" width="74" height="74" fill="#8b5e83"/><rect x="150" y="124" width="58" height="58" fill="#f4f1ec"/><rect x="160" y="134" width="38" height="8" fill="#3b5bdb"/>`, // shelf
-      `<rect x="260" y="166" width="76" height="42" fill="#2f9e5f"/><rect x="268" y="154" width="60" height="20" fill="#2f9e5f"/><rect x="270" y="202" width="10" height="18" fill="#5a3a25"/><rect x="316" y="202" width="10" height="18" fill="#5a3a25"/>`, // sofa
-      `<rect x="52" y="70" width="74" height="50" fill="#e2ddd5"/><rect x="60" y="78" width="58" height="34" fill="#3b5bdb"/><rect x="82" y="112" width="14" height="8" fill="#5a3a25"/>`, // monitor
-      `<rect x="236" y="58" width="58" height="58" fill="#d9ad86"/><rect x="244" y="66" width="42" height="42" fill="#fff"/><rect x="252" y="74" width="26" height="26" fill="#2f9e5f"/>` // plant/art
+      `<rect x="28" y="169" width="92" height="11" fill="#6a4532"/><rect x="37" y="180" width="9" height="36" fill="#4c2e23"/><rect x="102" y="180" width="9" height="36" fill="#4c2e23"/><rect x="39" y="148" width="72" height="21" fill="#c7895b"/><rect x="47" y="151" width="31" height="15" fill="#22253b"/><rect x="50" y="154" width="25" height="10" fill="#6d4aff"/><rect x="81" y="154" width="22" height="11" fill="#f6ead7"/>`,
+      `<rect x="150" y="89" width="66" height="95" fill="#68445a"/><rect x="156" y="95" width="54" height="82" fill="#f4ede1"/><rect x="162" y="102" width="18" height="8" fill="#6d4aff"/><rect x="186" y="102" width="17" height="8" fill="#f4b942"/><rect x="162" y="118" width="41" height="7" fill="#df9e58"/><rect x="162" y="135" width="15" height="30" fill="#55a975"/><rect x="181" y="142" width="22" height="23" fill="#6d4aff"/>`,
+      `<rect x="258" y="171" width="76" height="36" fill="#4e856e"/><rect x="265" y="156" width="62" height="25" fill="#59a17f"/><rect x="269" y="204" width="9" height="15" fill="#4a332a"/><rect x="315" y="204" width="9" height="15" fill="#4a332a"/><rect x="274" y="162" width="18" height="12" fill="#f2d9b7"/><rect x="296" y="162" width="20" height="12" fill="#6d4aff"/>`,
+      `<rect x="48" y="57" width="91" height="61" fill="#c8a380"/><rect x="55" y="64" width="77" height="46" fill="#fffaf0"/><rect x="62" y="71" width="63" height="32" fill="#7cbdde"/><rect x="84" y="103" width="19" height="7" fill="#4b3429"/><rect x="89" y="78" width="9" height="9" fill="#fff4b7"/>`,
+      `<rect x="260" y="60" width="52" height="51" fill="#80546b"/><rect x="266" y="66" width="40" height="39" fill="#fffaf0"/><rect x="275" y="75" width="22" height="21" fill="#55a975"/><rect x="283" y="67" width="6" height="12" fill="#3e8155"/><rect x="238" y="122" width="10" height="52" fill="#75503a"/><rect x="222" y="115" width="42" height="25" fill="#55a975"/><rect x="228" y="103" width="30" height="27" fill="#63bd80"/>`
     ];
-    let art = `<svg viewBox="0 0 360 240" aria-label="Studio in grafica 8 bit">
-      <rect width="360" height="240" fill="#e9dfd2"/>
-      <rect y="168" width="360" height="72" fill="#c8b29d"/>
-      <rect y="28" width="360" height="8" fill="#d6c7b8"/>
-      <rect x="18" y="38" width="120" height="8" fill="#d6c7b8"/>
-      <rect x="18" y="46" width="8" height="62" fill="#d6c7b8"/>
-      <rect x="330" y="36" width="8" height="92" fill="#d6c7b8"/>
-      <rect x="144" y="48" width="72" height="7" fill="#d6c7b8"/>`;
+    let art = `<svg viewBox="0 0 360 240" role="img" aria-label="Studio in grafica 8 bit">
+      <rect width="360" height="240" fill="#f4e4ce"/>
+      <rect y="168" width="360" height="72" fill="#c99f7e"/>
+      <rect y="168" width="360" height="6" fill="#a97c62"/>
+      <rect x="17" y="27" width="128" height="8" fill="#e8d1b7"/><rect x="17" y="35" width="9" height="75" fill="#e8d1b7"/>
+      <rect x="29" y="43" width="92" height="55" fill="#85c5df"/><rect x="34" y="48" width="82" height="45" fill="#bce4ed"/>
+      <rect x="82" y="48" width="7" height="45" fill="#fff6c6"/><rect x="34" y="69" width="82" height="7" fill="#fff6c6"/>
+      <rect x="331" y="30" width="8" height="102" fill="#e8d1b7"/>
+      <rect x="15" y="219" width="330" height="6" fill="#99705a"/>
+      <rect x="15" y="225" width="330" height="5" fill="#b98a6c"/>
+      <rect x="145" y="44" width="71" height="7" fill="#e8d1b7"/>
+      <rect x="284" y="27" width="25" height="15" fill="#f4b942"/><rect x="291" y="18" width="10" height="9" fill="#f4b942"/>`;
     for (let i = 0; i < furniture; i++) art += items[i];
     art += `</svg>`;
     return art;
+  }
+
+  function studioComparison(furniture) {
+    return `<div class="studio-compare">
+      <div class="studio-shot"><h3>Prima</h3>${studioSvg(0)}</div>
+      <div class="studio-shot after"><h3>Dopo · ${furniture}/5 arredi</h3>${studioSvg(furniture)}</div>
+    </div>`;
   }
 
   function celebrate() {
